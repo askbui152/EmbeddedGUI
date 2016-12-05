@@ -96,6 +96,8 @@ class Board(QWidget):
 		self.repaint()
 		self.carPos = [self.x, self.y]
 		self.carPrevPos = [self.prevX, self.prevY]
+	def printParked(self):
+		self.map[int(self.y/10)][int(self.x/10)] = 2
 	
 	def createMap(self):
 		# top horizontal
@@ -150,6 +152,7 @@ class Board(QWidget):
 	def drawMap(self, painter):
 		blackColor = QColor(0x000000)
 		whiteColor = QColor(0xFFFFFF)
+		redColor = QColor(0xFF0000)
 		brush = QBrush(Qt.SolidPattern)
 		#brush.setColor(blackColor)
 		#painter.setBrush(brush)
@@ -157,6 +160,10 @@ class Board(QWidget):
 			for j in range(20):
 				if self.map[i][j] == 1:
 					brush.setColor(blackColor)
+					painter.setBrush(brush)
+					painter.drawRect(j * 10, i * 10, 10, 10)
+				elif self.map[i][j] == 2:
+					brush.setColor(redColor)
 					painter.setBrush(brush)
 					painter.drawRect(j * 10, i * 10, 10, 10)
 				#if self.map[i][j] == 0:
@@ -301,7 +308,7 @@ class Window(QWidget):
 		self.runningText2 = self.runningText2 + sendDir2 + '\n'
 		self.sendTextBox.setText(self.runningText2)
 		#time.sleep(1)
-		self.board.direction('UP')
+		#self.board.direction('UP')
 		self.receiveTextBox.setText(self.runningText)
 		print('Left')
 
@@ -313,7 +320,7 @@ class Window(QWidget):
 		self.runningText2 = self.runningText2 + sendDir2 + '\n'
 		self.sendTextBox.setText(self.runningText2)
 		#time.sleep(1)
-		self.board.direction('DOWN')
+		#self.board.direction('DOWN')
 		self.receiveTextBox.setText(self.runningText)
 		print('Right')
 
@@ -325,7 +332,7 @@ class Window(QWidget):
 		self.runningText2 = self.runningText2 + sendDir2 + '\n'
 		self.sendTextBox.setText(self.runningText2)
 		#time.sleep(1)
-		self.board.direction('RIGHT')
+		#self.board.direction('RIGHT')
 		self.receiveTextBox.setText(self.runningText)
 		print('Forward')
 
@@ -337,7 +344,7 @@ class Window(QWidget):
 		self.runningText2 = self.runningText2 + sendDir2 + '\n'
 		self.sendTextBox.setText(self.runningText2)
 		#time.sleep(1)
-		self.board.direction('LEFT')
+		#self.board.direction('LEFT')
 		self.receiveTextBox.setText(self.runningText)
 		print('Reverse')
 	def turnIRSensor(self):
@@ -367,6 +374,7 @@ class Window(QWidget):
 		if self.data != b'~IS!00000-/*':
 			self.runningText = self.runningText + sendIRdetect + '\n'
 			print('OBJECT DETECTED')
+			self.board.printParked()
 		else: 
 			self.runningText = self.runningText + sendNoIRdetect + '\n'
 			print('NO OBJECT DETECTED')
@@ -406,12 +414,14 @@ class Window(QWidget):
 			self.turnForward()
 			time.sleep(2)
 			self.turnForward()
+			self.board.direction('RIGHT')
 			time.sleep(2)
 			self.turnForward()
 			time.sleep(2)
-
+			self.board.direction('RIGHT')
 			# first check left right
 			self.turnLeft()
+			self.board.direction('UP')
 			time.sleep(2)
 			# first car
 			# sendAuto2 = 'Check distance'
@@ -423,8 +433,10 @@ class Window(QWidget):
 			# self.receiveTextBox.setText(self.runningText)
 			self.runIRSensor()
 			self.turnRight()
+			self.board.direction('DOWN')
 			time.sleep(2)
 			self.turnRight()
+			self.board.direction('DOWN')
 			time.sleep(2)
 			# second car
 			# self.runningText = self.runningText + sendAuto + '\n'
@@ -433,17 +445,22 @@ class Window(QWidget):
 			# self.receiveTextBox.setText(self.runningText)
 			self.runIRSensor()
 			self.turnLeft()
+			self.board.direction('UP')
+			time.sleep(2)
+			self.turnForward()
+			self.board.direction('RIGHT')
 			time.sleep(2)
 			self.turnForward()
 			time.sleep(2)
 			self.turnForward()
+			self.board.direction('RIGHT')
 			time.sleep(2)
 			self.turnForward()
-			time.sleep(2)
-			self.turnForward()
+			self.board.direction('RIGHT')
 
 			# second check left right
 			self.turnLeft()
+			self.board.direction('UP')
 			time.sleep(2)
 			# third car
 			# self.runningText = self.runningText + sendAuto + '\n'
@@ -452,8 +469,10 @@ class Window(QWidget):
 			# self.receiveTextBox.setText(self.runningText)
 			self.runIRSensor()
 			self.turnRight()
+			self.board.direction('DOWN')
 			time.sleep(2)
 			self.turnRight()
+			self.board.direction('DOWN')
 			time.sleep(2)
 			# self.runningText = self.runningText + sendAuto3 + '\n'
 			# self.runningText2 = self.runningText2 + sendAuto2 + '\n'
@@ -461,17 +480,22 @@ class Window(QWidget):
 			# self.receiveTextBox.setText(self.runningText)
 			self.runIRSensor()
 			self.turnLeft()
+			self.board.direction('UP')
+			time.sleep(2)
+			self.turnForward()
+			self.board.direction('RIGHT')
 			time.sleep(2)
 			self.turnForward()
 			time.sleep(2)
 			self.turnForward()
+			self.board.direction('RIGHT')
 			time.sleep(2)
 			self.turnForward()
-			time.sleep(2)
-			self.turnForward()
+			self.board.direction('RIGHT')
 
 			# third check left right
 			self.turnLeft()
+			self.board.direction('UP')
 			time.sleep(2)
 			# self.runningText = self.runningText + sendAuto3 + '\n'
 			# self.runningText2 = self.runningText2 + sendAuto2 + '\n'
@@ -479,8 +503,10 @@ class Window(QWidget):
 			# self.receiveTextBox.setText(self.runningText)
 			self.runIRSensor()
 			self.turnRight()
+			self.board.direction('DOWN')
 			time.sleep(2)
 			self.turnRight()
+			self.board.direction('DOWN')
 			time.sleep(2)
 			# self.runningText = self.runningText + sendAuto3 + '\n'
 			# self.runningText2 = self.runningText2 + sendAuto2 + '\n'
@@ -488,17 +514,22 @@ class Window(QWidget):
 			# self.receiveTextBox.setText(self.runningText)
 			self.runIRSensor()
 			self.turnLeft()
+			self.board.direction('UP')
 			time.sleep(2)
 			self.turnForward()
 			time.sleep(2)
 			self.turnForward()
+			self.board.direction('RIGHT')
 			time.sleep(2)
 			self.turnForward()
+			self.board.direction('RIGHT')
 			time.sleep(2)
 			self.turnForward()
+			self.board.direction('RIGHT')
 
 			# fourth check left right
 			self.turnLeft()
+			self.board.direction('UP')
 			time.sleep(2)
 			# self.runningText = self.runningText + sendAuto + '\n'
 			# self.runningText2 = self.runningText2 + sendAuto2 + '\n'
@@ -506,11 +537,14 @@ class Window(QWidget):
 			# self.receiveTextBox.setText(self.runningText)
 			self.runIRSensor()
 			self.turnRight()
+			self.board.direction('DOWN')
 			time.sleep(2)
 			self.turnRight()
+			self.board.direction('DOWN')
 			self.runIRSensor()
 			time.sleep(2)
 			self.turnLeft()
+			self.board.direction('UP')
 
 		elif sender.text() == 'Left':
 			self.turnLeft()
