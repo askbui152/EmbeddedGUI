@@ -10,6 +10,179 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+class Board(QWidget):
+
+	boardWidth = 20;
+	boardHeight = 20;
+	def __init__(self):
+		super().__init__()
+		self.map = [[0 for i in range(20)] for i in range(20)]
+		#for i in range(20):
+		#	for j in range(20):
+		#		print(self.map[i][j])
+		self.initUI()
+	
+	def initUI(self):
+		#self.setStyleSheet("QWidget { background: #A9F5D0 }")
+		self.setStyleSheet("QWidget { background: #FFFFFF }")
+		self.newStart()
+		#self.setFixedSize(500,500)
+		#self.createMap()
+		self.createMap2()
+		self.resize(200,200)
+		self.setWindowTitle('Board')
+		self.show()
+		
+		
+		#self.map = [[10,10], [20,10], [30,10], [40,10], [50,10]
+		#            [60,10], [70,10], [80,10],[90,10]]
+		#print(self.map)
+	def paintEvent(self, e):
+		painter = QPainter()
+		painter.begin(self)
+		self.drawMap(painter)
+		self.drawCar(painter)
+		painter.end()
+		
+	def keyPressEvent(self,e):
+		key = e.key()
+		if key == Qt.Key_Left:
+			self.direction('LEFT')
+			#print('LEFT')
+		elif key == Qt.Key_Right:
+			self.direction('RIGHT')
+		elif key == Qt.Key_Up:
+			self.direction('UP')
+		elif key == Qt.Key_Down:
+			self.direction('DOWN')
+		elif key == Qt.Key_Escape:
+			self.close()
+	
+	def newStart(self):
+		self.x = 10;
+		self.y = 100;
+		self.prevX = 0;
+		self.prevY = 0;
+		self.carPos = [self.x, self.y]
+		self.carPrevPos = [self.prevX, self.prevY]
+	
+	def direction(self, dir):
+		self.prevX = self.x
+		self.prevY = self.y
+		if dir == 'DOWN':
+			#if self.map[int(self.x/10)][int(self.y/10)] == 1:
+			if self.map[int((self.y+10)/10)][int(self.x/10)] == 1:
+				self.y = self.y + 10
+			else:
+				self.y = self.y
+		elif dir == 'UP':
+			#if self.map[int(self.x/10)][int(self.y/10)] == 1:
+			if self.map[int((self.y-10)/10)][int(self.x/10)] == 1:
+				self.y = self.y - 10
+			else:
+				self.y = self.y
+		elif dir == 'RIGHT':
+			if self.map[int(self.y/10)][int((self.x+10)/10)] == 1:
+				self.x = self.x + 10
+			else:
+				self.x = self.x
+		elif dir == 'LEFT':
+			if self.map[int(self.y/10)][int((self.x-10)/10)] == 1:
+				self.x = self.x - 10
+			else:
+				self.x = self.x
+		print("X: {}   Y: {}  ".format(self.x/10, self.y/10))
+		print
+		self.repaint()
+		self.carPos = [self.x, self.y]
+		self.carPrevPos = [self.prevX, self.prevY]
+	
+	def createMap(self):
+		# top horizontal
+		for i in range(2,17):
+			self.map[2][i] = 1
+		
+		# right vertical
+		for i in range(2,8):
+			self.map[i][17] = 1
+		
+		# second horizontal
+		for i in range(2,17):
+			self.map[7][i] = 1
+		
+		# left vertical
+		for i in range(7,12):
+			self.map[i][2] = 1
+		
+		# third horizontal
+		for i in range(2, 17):
+			self.map[12][i] = 1
+		
+		# right vertical
+		for i in range(12,20):
+			self.map[i][17] = 1
+			
+	
+	def createMap2(self):
+		# road
+		for i in range(1, 18):
+			self.map[10][i] = 1
+		
+		# parking spots
+		for i in range(9,12):
+			self.map[i][3] = 1
+		
+		for i in range(9,12):
+			self.map[i][6] = 1
+		
+		for i in range(9,12):
+			self.map[i][9] = 1
+			
+		for i in range(9,12):
+			self.map[i][12] = 1
+		
+		for i in range(9,12):
+			self.map[i][15] = 1
+		
+		
+			
+			
+	def drawMap(self, painter):
+		blackColor = QColor(0x000000)
+		whiteColor = QColor(0xFFFFFF)
+		brush = QBrush(Qt.SolidPattern)
+		#brush.setColor(blackColor)
+		#painter.setBrush(brush)
+		for i in range(20):
+			for j in range(20):
+				if self.map[i][j] == 1:
+					brush.setColor(blackColor)
+					painter.setBrush(brush)
+					painter.drawRect(j * 10, i * 10, 10, 10)
+				#if self.map[i][j] == 0:
+				#	brush.setColor(whiteColor)
+				#	painter.setBrush(brush)
+				#	painter.drawRect(i * 10, j * 10, 10, 10)
+				#else:
+				#	brush.setColor(blackColor)
+				#	painter.setBrush(brush)
+				#	painter.drawRect(i * 10, j * 10, 10, 10)
+				
+		
+	def drawCar(self, painter):
+		blueColor = QColor(0x66CCCC)
+		whiteColor = QColor(0xFFFFFF)
+		
+		brush = QBrush(Qt.SolidPattern)
+		brush.setColor(blueColor)
+		painter.setBrush(brush)
+		painter.drawRect(self.x, self.y, 10,10)
+		
+		#brush.setColor(whiteColor)
+		#painter.setBrush(brush)
+		#painter.drawRect(self.prevX, self.prevY, 12,12)
+		#painter.drawRect(self.x, self.y, 1, 1, color)
+
 class Window(QWidget):
 	def __init__(self):
 		super().__init__() # Initalization of the GUI Window
@@ -24,7 +197,7 @@ class Window(QWidget):
 		self.s.connect((self.TCP_IP,int(self.TCP_PORT)))  # Connects accordingly.
 		self.my_timer = QTimer()
 		self.my_timer.timeout.connect(self.receiveData)
-		self.my_timer.start(100) #10 Micro Second Period to update
+		self.my_timer.start(10000) #10 Micro Second Period to update
 		##############################################
 		############## Window Layout #################
 		##############################################
@@ -36,7 +209,8 @@ class Window(QWidget):
 		self.controlLabel.setAlignment(Qt.AlignCenter)
 		self.sendTextBox = QTextEdit()
 		self.receiveTextBox = QTextEdit()
-		self.mapWindow = QTextEdit()  # Should Edit as a textbox is not a map Window ? Possible Reason for Error ?
+		self.board = Board()
+		#self.mapWindow = QTextEdit()  # Should Edit as a textbox is not a map Window ? Possible Reason for Error ?
 		################# Creation of Buttons in the Center ###############
 		self.autoButton = QPushButton('Auto', self)
 		self.leftButton = QPushButton('Left', self)
@@ -47,7 +221,7 @@ class Window(QWidget):
 		self.sendButton = QPushButton('Send', self)
 		self.receiveButton = QPushButton('Receive', self)
 		self.irSensorButton = QPushButton('irSensor',self)
-		self.lineSensorButton = QPushButton('lineSensor',self)
+		#self.lineSensorButton = QPushButton('lineSensor',self)
 		############### Linking Buttons to proper signals #################
 		self.autoButton.clicked.connect(self.buttonClicked)
 		self.leftButton.clicked.connect(self.buttonClicked)
@@ -58,7 +232,7 @@ class Window(QWidget):
 		self.sendButton.clicked.connect(self.buttonClicked)
 		self.receiveButton.clicked.connect(self.buttonClicked)
 		self.irSensorButton.clicked.connect(self.buttonClicked)
-		self.lineSensorButton.clicked.connect(self.buttonClicked)
+		#self.lineSensorButton.clicked.connect(self.buttonClicked)
 		self.quitButton = QPushButton('Quit', self)
 		self.quitButton.clicked.connect(QCoreApplication.instance().quit)
 		################ Organizing them and adding the Widgets ############
@@ -79,7 +253,7 @@ class Window(QWidget):
 		self.vbox2.addWidget(self.stopButton)
 		self.vbox2.addWidget(self.receiveButton)
 		self.vbox2.addWidget(self.irSensorButton)
-		self.vbox2.addWidget(self.lineSensorButton)
+		#self.vbox2.addWidget(self.lineSensorButton)
 		self.vbox2.addStretch()
 		self.vbox2.addWidget(self.sendButton)
 		self.vbox2.addStretch()
@@ -94,6 +268,9 @@ class Window(QWidget):
 		self.hbox1.addLayout(self.vbox3)
 		self.vboxMain = QVBoxLayout()
 		self.vboxMain.addLayout(self.hbox1)
+		self.boardBox = QHBoxLayout(self.board)
+		self.vboxMain.addLayout(self.boardBox)
+		self.vboxMain.addStretch()
 		self.vboxMain.addWidget(self.quitButton)
 		############# Window Information #################
 		self.setLayout(self.vboxMain)
@@ -104,9 +281,10 @@ class Window(QWidget):
 	def receiveData(self):
 		self.data = self.s.recv(8192)  # Data Received
 		# Function Call to append to the GUI goes handle_read
-		self.runningText = self.runningText + str(self.data) + '\n'
-		self.receiveTextBox.setText(self.runningText)
-		self.receiveTextBox.moveCursor(QTextCursor.End)
+		#self.runningText = self.runningText + str(self.data) + '\n'
+		#self.receiveTextBox.setText(self.runningText)
+		#self.receiveTextBox.moveCursor(QTextCursor.End)
+		print(str(self.data))
 	def keyPressEvent(self, e):
 		if e.key() == Qt.Key_Escape:
 			self.s.close()
@@ -124,6 +302,7 @@ class Window(QWidget):
 		self.runningText2 = self.runningText2 + sendDir2 + '\n'
 		self.sendTextBox.setText(self.runningText2)
 		#time.sleep(1)
+		self.board.direction('UP')
 		self.receiveTextBox.setText(self.runningText)
 		print('Left')
 
@@ -135,6 +314,7 @@ class Window(QWidget):
 		self.runningText2 = self.runningText2 + sendDir2 + '\n'
 		self.sendTextBox.setText(self.runningText2)
 		#time.sleep(1)
+		self.board.direction('DOWN')
 		self.receiveTextBox.setText(self.runningText)
 		print('Right')
 
@@ -146,6 +326,7 @@ class Window(QWidget):
 		self.runningText2 = self.runningText2 + sendDir2 + '\n'
 		self.sendTextBox.setText(self.runningText2)
 		#time.sleep(1)
+		self.board.direction('RIGHT')
 		self.receiveTextBox.setText(self.runningText)
 		print('Forward')
 
@@ -157,6 +338,7 @@ class Window(QWidget):
 		self.runningText2 = self.runningText2 + sendDir2 + '\n'
 		self.sendTextBox.setText(self.runningText2)
 		#time.sleep(1)
+		self.board.direction('LEFT')
 		self.receiveTextBox.setText(self.runningText)
 		print('Reverse')
 	def turnIrSensor(self):
@@ -170,16 +352,16 @@ class Window(QWidget):
 		self.receiveTextBox.setText(self.runningText)
 		print('IR')
 	
-	def turnLineSensor(self):
-		self.s.send(b'Z')
-		sendDir2 = 'lineSensor'
-		sendDir = 'lineSensor-Ack'
-		self.runningText = self.runningText + sendDir + '\n'
-		self.runningText2 = self.runningText2 + sendDir2 + '\n'
-		self.sendTextBox.setText(self.runningText2)
-		#time.sleep(1)
-		self.receiveTextBox.setText(self.runningText)
-		print('Line')
+	# def turnLineSensor(self):
+		# self.s.send(b'Z')
+		# sendDir2 = 'lineSensor'
+		# sendDir = 'lineSensor-Ack'
+		# self.runningText = self.runningText + sendDir + '\n'
+		# self.runningText2 = self.runningText2 + sendDir2 + '\n'
+		# self.sendTextBox.setText(self.runningText2)
+		# #time.sleep(1)
+		# self.receiveTextBox.setText(self.runningText)
+		# print('Line')
 
 	def turnStop(self):
 		self.s.send(b'S')
@@ -324,8 +506,8 @@ class Window(QWidget):
 			self.appendTextBox()
 		elif sender.text() == 'irSensor':
 			self.turnIrSensor()
-		elif sender.text() == 'lineSensor':
-			self.turnLineSensor()
+		# elif sender.text() == 'lineSensor':
+			# self.turnLineSensor()
 			
 		else:
 			print('Hello')

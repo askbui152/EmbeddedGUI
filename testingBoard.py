@@ -305,6 +305,7 @@ class Window(QWidget):
 		self.vboxMain = QVBoxLayout()
 		self.vboxMain.addLayout(self.hbox1)
 		self.boardBox = QHBoxLayout(self.board)
+		self.vboxMain.addLayout(self.boardBox)
 		self.vboxMain.addStretch()
 		#self.vboxMain.addWidget(self.boardWindow)
 		#self.vboxMain.addStretch()
