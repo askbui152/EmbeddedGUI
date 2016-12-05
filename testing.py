@@ -195,9 +195,9 @@ class Window(QWidget):
 		self.size = 1024                # Size of Messages that we can receive or send
 		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Basic Connection Setup
 		self.s.connect((self.TCP_IP,int(self.TCP_PORT)))  # Connects accordingly.
-		self.my_timer = QTimer()
-		self.my_timer.timeout.connect(self.receiveData)
-		self.my_timer.start(10000) #10 Micro Second Period to update
+		#self.my_timer = QTimer()
+		#self.my_timer.timeout.connect(self.receiveData)
+		#self.my_timer.start(10000) #10 Micro Second Period to update
 		##############################################
 		############## Window Layout #################
 		##############################################
@@ -281,10 +281,9 @@ class Window(QWidget):
 	def receiveData(self):
 		self.data = self.s.recv(8192)  # Data Received
 		# Function Call to append to the GUI goes handle_read
-		#self.runningText = self.runningText + str(self.data) + '\n'
-		#self.receiveTextBox.setText(self.runningText)
-		#self.receiveTextBox.moveCursor(QTextCursor.End)
-		print(str(self.data))
+		self.runningText = self.runningText + str(self.data) + '\n'
+		self.receiveTextBox.setText(self.runningText)
+		self.receiveTextBox.moveCursor(QTextCursor.End)
 	def keyPressEvent(self, e):
 		if e.key() == Qt.Key_Escape:
 			self.s.close()
@@ -343,13 +342,15 @@ class Window(QWidget):
 		print('Reverse')
 	def turnIrSensor(self):
 		self.s.send(b'I')
-		sendDir2 = 'irSensor'
-		sendDir = 'irSensor-Ack'
-		self.runningText = self.runningText + sendDir + '\n'
-		self.runningText2 = self.runningText2 + sendDir2 + '\n'
-		self.sendTextBox.setText(self.runningText2)
+		# sendDir2 = 'irSensor'
+		# sendDir = 'irSensor-Ack'
+		self.receiveData()
+		#if self.data == 'b'~IS!00000-
+		# #self.runningText = self.runningText + sendDir + '\n'
+		# self.runningText2 = self.runningText2 + sendDir2 + '\n'
+		# self.sendTextBox.setText(self.runningText2)
 		#time.sleep(1)
-		self.receiveTextBox.setText(self.runningText)
+		#self.receiveTextBox.setText(self.runningText)
 		print('IR')
 	
 	# def turnLineSensor(self):
