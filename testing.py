@@ -22,9 +22,9 @@ class Window(QWidget):
 		self.size = 1024                # Size of Messages that we can receive or send
 		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Basic Connection Setup
 		self.s.connect((self.TCP_IP,int(self.TCP_PORT)))  # Connects accordingly.
-		self.my_timer = QtCore.QTimer()
-        self.my_timer.timeout.connect(self.receiveData)
-        self.my_timer.start(100) #10 Micro Second Period to update
+		self.my_timer = QTimer()
+		self.my_timer.timeout.connect(self.receiveData)
+		self.my_timer.start(100) #10 Micro Second Period to update
 		##############################################
 		############## Window Layout #################
 		##############################################
@@ -46,6 +46,8 @@ class Window(QWidget):
 		self.stopButton = QPushButton('Stop', self)
 		self.sendButton = QPushButton('Send', self)
 		self.receiveButton = QPushButton('Receive', self)
+		self.irSensorButton = QPushButton('irSensor',self)
+		self.lineSensorButton = QPushButton('lineSensor',self)
 		############### Linking Buttons to proper signals #################
 		self.autoButton.clicked.connect(self.buttonClicked)
 		self.leftButton.clicked.connect(self.buttonClicked)
@@ -55,6 +57,8 @@ class Window(QWidget):
 		self.stopButton.clicked.connect(self.buttonClicked)
 		self.sendButton.clicked.connect(self.buttonClicked)
 		self.receiveButton.clicked.connect(self.buttonClicked)
+		self.irSensorButton.clicked.connect(self.buttonClicked)
+		self.lineSensorButton.clicked.connect(self.buttonClicked)
 		self.quitButton = QPushButton('Quit', self)
 		self.quitButton.clicked.connect(QCoreApplication.instance().quit)
 		################ Organizing them and adding the Widgets ############
@@ -74,6 +78,8 @@ class Window(QWidget):
 		self.vbox2.addWidget(self.reverseButton)
 		self.vbox2.addWidget(self.stopButton)
 		self.vbox2.addWidget(self.receiveButton)
+		self.vbox2.addWidget(self.irSensorButton)
+		self.vbox2.addWidget(self.lineSensorButton)
 		self.vbox2.addStretch()
 		self.vbox2.addWidget(self.sendButton)
 		self.vbox2.addStretch()
@@ -100,6 +106,7 @@ class Window(QWidget):
 		# Function Call to append to the GUI goes handle_read
 		self.runningText = self.runningText + str(self.data) + '\n'
 		self.receiveTextBox.setText(self.runningText)
+		self.receiveTextBox.moveCursor(QTextCursor.End)
 	def keyPressEvent(self, e):
 		if e.key() == Qt.Key_Escape:
 			self.s.close()
@@ -152,6 +159,27 @@ class Window(QWidget):
 		#time.sleep(1)
 		self.receiveTextBox.setText(self.runningText)
 		print('Reverse')
+	def turnIrSensor(self):
+		self.s.send(b'I')
+		sendDir2 = 'irSensor'
+		sendDir = 'irSensor-Ack'
+		self.runningText = self.runningText + sendDir + '\n'
+		self.runningText2 = self.runningText2 + sendDir2 + '\n'
+		self.sendTextBox.setText(self.runningText2)
+		#time.sleep(1)
+		self.receiveTextBox.setText(self.runningText)
+		print('IR')
+	
+	def turnLineSensor(self):
+		self.s.send(b'Z')
+		sendDir2 = 'lineSensor'
+		sendDir = 'lineSensor-Ack'
+		self.runningText = self.runningText + sendDir + '\n'
+		self.runningText2 = self.runningText2 + sendDir2 + '\n'
+		self.sendTextBox.setText(self.runningText2)
+		#time.sleep(1)
+		self.receiveTextBox.setText(self.runningText)
+		print('Line')
 
 	def turnStop(self):
 		self.s.send(b'S')
@@ -294,6 +322,11 @@ class Window(QWidget):
 			self.sendTextBox.clear()
 		elif sender.text() == 'Receive':
 			self.appendTextBox()
+		elif sender.text() == 'irSensor':
+			self.turnIrSensor()
+		elif sender.text() == 'lineSensor':
+			self.turnLineSensor()
+			
 		else:
 			print('Hello')
 
