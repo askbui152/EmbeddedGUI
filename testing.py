@@ -340,19 +340,37 @@ class Window(QWidget):
 		self.board.direction('LEFT')
 		self.receiveTextBox.setText(self.runningText)
 		print('Reverse')
-	def turnIrSensor(self):
+	def turnIRSensor(self):
 		self.s.send(b'I')
 		# sendDir2 = 'irSensor'
 		# sendDir = 'irSensor-Ack'
 		self.receiveData()
-		#if self.data == 'b'~IS!00000-
+		#if self.data != b'~IS!00000-/*':
+		#	print('WORKING')
 		# #self.runningText = self.runningText + sendDir + '\n'
 		# self.runningText2 = self.runningText2 + sendDir2 + '\n'
 		# self.sendTextBox.setText(self.runningText2)
 		#time.sleep(1)
 		#self.receiveTextBox.setText(self.runningText)
 		print('IR')
-	
+	def runIRSensor(self):
+		sendCheckDist = 'Check distance'
+		sendIRdetect = 'IR: Object detected'
+		sendNoIRdetect = 'IR: No object detected'
+		self.turnIRSensor()
+		self.turnIRSensor()
+		self.turnIRSensor()
+		self.turnIRSensor()
+		#self.receiveData()
+		self.runningText2 = self.runningText2 + sendCheckDist + '\n'
+		self.sendTextBox.setText(self.runningText2)
+		if self.data != b'~IS!00000-/*':
+			self.runningText = self.runningText + sendIRdetect + '\n'
+			print('OBJECT DETECTED')
+		else: 
+			self.runningText = self.runningText + sendNoIRdetect + '\n'
+			print('NO OBJECT DETECTED')
+		self.receiveTextBox.setText(self.runningText)
 	# def turnLineSensor(self):
 		# self.s.send(b'Z')
 		# sendDir2 = 'lineSensor'
@@ -396,22 +414,24 @@ class Window(QWidget):
 			self.turnLeft()
 			time.sleep(2)
 			# first car
-			sendAuto2 = 'Check distance'
-			sendAuto = 'IR: Object detected'
-			sendAuto3 = 'IR: No object detected'
-			self.runningText = self.runningText + sendAuto + '\n'
-			self.runningText2 = self.runningText2 + sendAuto2 + '\n'
-			self.sendTextBox.setText(self.runningText2)
-			self.receiveTextBox.setText(self.runningText)
+			# sendAuto2 = 'Check distance'
+			# sendAuto = 'IR: Object detected'
+			# sendAuto3 = 'IR: No object detected'
+			# self.runningText = self.runningText + sendAuto + '\n'
+			# self.runningText2 = self.runningText2 + sendAuto2 + '\n'
+			# self.sendTextBox.setText(self.runningText2)
+			# self.receiveTextBox.setText(self.runningText)
+			self.runIRSensor()
 			self.turnRight()
 			time.sleep(2)
 			self.turnRight()
 			time.sleep(2)
 			# second car
-			self.runningText = self.runningText + sendAuto + '\n'
-			self.runningText2 = self.runningText2 + sendAuto2 + '\n'
-			self.sendTextBox.setText(self.runningText2)
-			self.receiveTextBox.setText(self.runningText)
+			# self.runningText = self.runningText + sendAuto + '\n'
+			# self.runningText2 = self.runningText2 + sendAuto2 + '\n'
+			# self.sendTextBox.setText(self.runningText2)
+			# self.receiveTextBox.setText(self.runningText)
+			self.runIRSensor()
 			self.turnLeft()
 			time.sleep(2)
 			self.turnForward()
@@ -426,18 +446,20 @@ class Window(QWidget):
 			self.turnLeft()
 			time.sleep(2)
 			# third car
-			self.runningText = self.runningText + sendAuto + '\n'
-			self.runningText2 = self.runningText2 + sendAuto2 + '\n'
-			self.sendTextBox.setText(self.runningText2)
-			self.receiveTextBox.setText(self.runningText)
+			# self.runningText = self.runningText + sendAuto + '\n'
+			# self.runningText2 = self.runningText2 + sendAuto2 + '\n'
+			# self.sendTextBox.setText(self.runningText2)
+			# self.receiveTextBox.setText(self.runningText)
+			self.runIRSensor()
 			self.turnRight()
 			time.sleep(2)
 			self.turnRight()
 			time.sleep(2)
-			self.runningText = self.runningText + sendAuto3 + '\n'
-			self.runningText2 = self.runningText2 + sendAuto2 + '\n'
-			self.sendTextBox.setText(self.runningText2)
-			self.receiveTextBox.setText(self.runningText)
+			# self.runningText = self.runningText + sendAuto3 + '\n'
+			# self.runningText2 = self.runningText2 + sendAuto2 + '\n'
+			# self.sendTextBox.setText(self.runningText2)
+			# self.receiveTextBox.setText(self.runningText)
+			self.runIRSensor()
 			self.turnLeft()
 			time.sleep(2)
 			self.turnForward()
@@ -451,18 +473,20 @@ class Window(QWidget):
 			# third check left right
 			self.turnLeft()
 			time.sleep(2)
-			self.runningText = self.runningText + sendAuto3 + '\n'
-			self.runningText2 = self.runningText2 + sendAuto2 + '\n'
-			self.sendTextBox.setText(self.runningText2)
-			self.receiveTextBox.setText(self.runningText)
+			# self.runningText = self.runningText + sendAuto3 + '\n'
+			# self.runningText2 = self.runningText2 + sendAuto2 + '\n'
+			# self.sendTextBox.setText(self.runningText2)
+			# self.receiveTextBox.setText(self.runningText)
+			self.runIRSensor()
 			self.turnRight()
 			time.sleep(2)
 			self.turnRight()
 			time.sleep(2)
-			self.runningText = self.runningText + sendAuto3 + '\n'
-			self.runningText2 = self.runningText2 + sendAuto2 + '\n'
-			self.sendTextBox.setText(self.runningText2)
-			self.receiveTextBox.setText(self.runningText)
+			# self.runningText = self.runningText + sendAuto3 + '\n'
+			# self.runningText2 = self.runningText2 + sendAuto2 + '\n'
+			# self.sendTextBox.setText(self.runningText2)
+			# self.receiveTextBox.setText(self.runningText)
+			self.runIRSensor()
 			self.turnLeft()
 			time.sleep(2)
 			self.turnForward()
@@ -476,13 +500,15 @@ class Window(QWidget):
 			# fourth check left right
 			self.turnLeft()
 			time.sleep(2)
-			self.runningText = self.runningText + sendAuto + '\n'
-			self.runningText2 = self.runningText2 + sendAuto2 + '\n'
-			self.sendTextBox.setText(self.runningText2)
-			self.receiveTextBox.setText(self.runningText)
+			# self.runningText = self.runningText + sendAuto + '\n'
+			# self.runningText2 = self.runningText2 + sendAuto2 + '\n'
+			# self.sendTextBox.setText(self.runningText2)
+			# self.receiveTextBox.setText(self.runningText)
+			self.runIRSensor()
 			self.turnRight()
 			time.sleep(2)
 			self.turnRight()
+			self.runIRSensor()
 			time.sleep(2)
 			self.turnLeft()
 
@@ -506,7 +532,7 @@ class Window(QWidget):
 		elif sender.text() == 'Receive':
 			self.appendTextBox()
 		elif sender.text() == 'irSensor':
-			self.turnIrSensor()
+			self.turnIRSensor()
 		# elif sender.text() == 'lineSensor':
 			# self.turnLineSensor()
 			
