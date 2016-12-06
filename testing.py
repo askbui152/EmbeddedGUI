@@ -143,8 +143,8 @@ class Board(QWidget):
 		for i in range(9,12):
 			self.map[i][12] = 1
 		
-		for i in range(9,12):
-			self.map[i][15] = 1
+		# for i in range(9,12):
+			# self.map[i][15] = 1
 		
 		
 			
